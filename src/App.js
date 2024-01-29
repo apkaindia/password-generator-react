@@ -46,7 +46,7 @@ function App() {
         </div>
         <div>
           <div className="slidecontainer">
-            <input
+           Range : 6 TO 20 <input
               type="range"
               min="6"
               max="20"
@@ -54,8 +54,8 @@ function App() {
               className="slider"
               id="myRange"
               onChange={(e) => setRange(e.target.value)}
-            />
-            <button id="button-range">{range}Range Bar </button>
+            /> 
+            {range}
             <input
               type="checkbox"
               value={number}
