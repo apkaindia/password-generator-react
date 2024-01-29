@@ -1,24 +1,81 @@
-import logo from './logo.svg';
-import './App.css';
+import { useCallback, useEffect, useRef, useState } from "react";
+import "./App.css";
 
 function App() {
+  const [password, setPassword] = useState();
+  const [range, setRange] = useState(6);
+  const [number, setNumber] = useState(false);
+  const [Character, setCharacter] = useState(false);
+  const passwordRef=useRef(null);
+
+  let passwordCopy =useCallback(()=>{
+    passwordRef.current?.select()
+    window.navigator.clipboard.writeText(password);
+
+  },[password])
+
+  let passwordGenerator = useCallback(() => {
+    let letter = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    if (number) letter += "0123456789";
+    if (Character) letter += "!@#$%&^_+-/|?><*";
+    let pass = "";
+    for (let i = 0; i < range; i++) {
+      pass += letter[Math.floor(Math.random() * letter.length)];
+    }
+    setPassword(pass);
+  }, [range, number, Character, setPassword]);
+  
+  useEffect(() => {
+    passwordGenerator();
+  }, [passwordGenerator]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <div className="App-header">
+        <h1 className="">Password for Length {range}</h1>
+        <div>
+          <input
+            id="password"
+            className="button"
+            value={password}
+            type="text"
+            readOnly
+          ref={passwordRef}
+          />
+          <button id="button" onClick={passwordCopy}>Copy</button>
+        </div>
+        <div>
+          <div className="slidecontainer">
+            <input
+              type="range"
+              min="6"
+              max="20"
+              value={range}
+              className="slider"
+              id="myRange"
+              onChange={(e) => setRange(e.target.value)}
+            />
+            <button id="button-range">{range}Range Bar </button>
+            <input
+              type="checkbox"
+              value={number}
+              onChange={(prevValue) => {
+                setNumber((prevValue) => !prevValue);
+              }}
+            />
+            : Number
+            <input
+              type="checkbox"
+              value={Character}
+              onChange={(prevValue) => {
+                setCharacter((prevValue) => !prevValue);
+              }}
+            />{" "}
+            : Character
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
